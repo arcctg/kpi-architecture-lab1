@@ -1,0 +1,8 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+jwt:
+  secret: bXktc3VwZXItc2VjcmV0LWtleS1mb3ItZmxhc2hjYXJkLWFwaS10aGF0LWlzLWxvbmctZW5vdWdoLWZvci1oczI1Ng==
+  expiration: 86400000
