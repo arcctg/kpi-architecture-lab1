@@ -72,12 +72,26 @@ mvn verify
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | `/api/decks/{deckId}/cards?search=` | List cards (paginated, filterable) |
+| GET | `/api/decks/{deckId}/cards/random` | Get a random card from deck |
 | POST | `/api/decks/{deckId}/cards` | Add a card |
 | GET | `/api/decks/{deckId}/cards/{cardId}` | Get card details |
 | PUT | `/api/decks/{deckId}/cards/{cardId}` | Update a card |
 | DELETE | `/api/decks/{deckId}/cards/{cardId}` | Delete a card |
 
 All endpoints except `/api/auth/**` require `Authorization: Bearer <token>` header.
+
+## Swagger UI
+
+Interactive API documentation is available at:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+1. Start the application
+2. Open the Swagger UI URL in your browser
+3. Click **Authorize** and enter your JWT token (obtained from `/api/auth/login` or `/api/auth/register`)
+4. Test any endpoint directly from the UI
 
 ## Usage Example
 
