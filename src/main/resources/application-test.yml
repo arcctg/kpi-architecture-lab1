@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/flashcard
+    username: flashcard
+    password: flashcard
   jpa:
     hibernate:
       ddl-auto: create-drop
