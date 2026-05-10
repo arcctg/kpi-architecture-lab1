@@ -175,4 +175,42 @@ class CardControllerIT extends BaseIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
+
+    @Test
+    void getRandomCard_returns200() {
+        restTemplate.exchange(cardsUrl(), HttpMethod.POST,
+                new HttpEntity<>(new CreateCardRequest("Term1", "Def1"), authHeaders()),
+                CardResponse.class);
+        restTemplate.exchange(cardsUrl(), HttpMethod.POST,
+                new HttpEntity<>(new CreateCardRequest("Term2", "Def2"), authHeaders()),
+                CardResponse.class);
+
+        ResponseEntity<CardResponse> response = restTemplate.exchange(
+                cardsUrl() + "/random", HttpMethod.GET,
+                new HttpEntity<>(authHeaders()), CardResponse.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().term()).isIn("Term1", "Term2");
+        assertThat(response.getBody().deckId()).isEqualTo(deckId);
+    }
+
+    @Test
+    void getRandomCard_emptyDeck_returns204() {
+        ResponseEntity<Void> response = restTemplate.exchange(
+                cardsUrl() + "/random", HttpMethod.GET,
+                new HttpEntity<>(authHeaders()), Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void getRandomCard_unauthorized_returns401() {
+        ResponseEntity<String> response = restTemplate.exchange(
+                cardsUrl() + "/random", HttpMethod.GET,
+                HttpEntity.EMPTY, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
 }
+

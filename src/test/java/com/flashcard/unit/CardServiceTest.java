@@ -164,4 +164,27 @@ class CardServiceTest {
 
         verify(cardRepository).delete(card);
     }
+
+    @Test
+    void getRandomCard_success() {
+        when(deckService.findDeckAndVerifyOwnership(10L, "owner@example.com")).thenReturn(deck);
+        when(cardRepository.countByDeckId(10L)).thenReturn(3L);
+        when(cardRepository.findByDeckId(eq(10L), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(List.of(card)));
+
+        Optional<CardResponse> result = cardService.getRandomCard(10L, "owner@example.com");
+
+        assertThat(result).isPresent();
+        assertThat(result.get().term()).isEqualTo("JVM");
+    }
+
+    @Test
+    void getRandomCard_emptyDeck_returnsEmpty() {
+        when(deckService.findDeckAndVerifyOwnership(10L, "owner@example.com")).thenReturn(deck);
+        when(cardRepository.countByDeckId(10L)).thenReturn(0L);
+
+        Optional<CardResponse> result = cardService.getRandomCard(10L, "owner@example.com");
+
+        assertThat(result).isEmpty();
+    }
 }

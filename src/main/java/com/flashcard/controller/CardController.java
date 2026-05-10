@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/decks/{deckId}/cards")
 public class CardController {
@@ -29,6 +31,14 @@ public class CardController {
                                         @AuthenticationPrincipal UserDetails user,
                                         Pageable pageable) {
         return cardService.listCards(deckId, user.getUsername(), search, pageable);
+    }
+
+    @GetMapping("/random")
+    public ResponseEntity<CardResponse> getRandomCard(@PathVariable Long deckId,
+                                                       @AuthenticationPrincipal UserDetails user) {
+        Optional<CardResponse> card = cardService.getRandomCard(deckId, user.getUsername());
+        return card.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @GetMapping("/{cardId}")

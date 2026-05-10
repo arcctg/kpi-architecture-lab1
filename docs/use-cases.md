@@ -118,3 +118,13 @@
 | **Preconditions** | Card exists in a deck owned by the user |
 | **Main Scenario** | 1. User requests deletion by deck ID and card ID. 2. System verifies ownership and card membership. 3. System deletes the card. 4. Returns 204. |
 | **Errors** | 404 — not found. 403 — not owner. 401 — not authenticated. |
+
+## UC-13: Get Random Card from Deck
+
+| Field | Description |
+|---|---|
+| **Actor** | Authenticated User |
+| **Preconditions** | Deck exists and is owned by the user |
+| **Main Scenario** | 1. User requests a random card from a deck by deck ID. 2. System verifies deck ownership. 3. System counts cards in the deck. 4. System selects a random card. 5. System returns the card details with 200. |
+| **Alternative Scenario** | If the deck has no cards, the system returns 204 No Content. |
+| **Errors** | 404 — deck not found. 403 — user does not own the deck. 401 — not authenticated. |

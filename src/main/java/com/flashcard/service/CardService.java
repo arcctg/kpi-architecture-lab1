@@ -9,9 +9,13 @@ import com.flashcard.exception.DuplicateResourceException;
 import com.flashcard.exception.ResourceNotFoundException;
 import com.flashcard.repository.CardRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class CardService {
@@ -88,6 +92,22 @@ public class CardService {
         deckService.findDeckAndVerifyOwnership(deckId, ownerEmail);
         Card card = findCardInDeck(cardId, deckId);
         cardRepository.delete(card);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CardResponse> getRandomCard(Long deckId, String ownerEmail) {
+        deckService.findDeckAndVerifyOwnership(deckId, ownerEmail);
+
+        long count = cardRepository.countByDeckId(deckId);
+        if (count == 0) {
+            return Optional.empty();
+        }
+
+        int randomIndex = ThreadLocalRandom.current().nextInt((int) count);
+        Page<Card> page = cardRepository.findByDeckId(deckId, PageRequest.of(randomIndex, 1));
+        Card card = page.getContent().get(0);
+
+        return Optional.of(CardResponse.from(card));
     }
 
     private Card findCardInDeck(Long cardId, Long deckId) {

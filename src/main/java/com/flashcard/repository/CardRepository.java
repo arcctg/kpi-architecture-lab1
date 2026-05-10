@@ -12,4 +12,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     Page<Card> findByDeckIdAndTermContainingIgnoreCase(Long deckId, String term, Pageable pageable);
 
     boolean existsByTermAndDeckId(String term, Long deckId);
+
+    long countByDeckId(Long deckId);
 }
